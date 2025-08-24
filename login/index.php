@@ -40,8 +40,8 @@
     ?>
 
     <center>
-        <img src="https://img.freepik.com/vector-gratis/gerentes-startups-que-presentan-analizan-tabla-crecimiento-ventas-grupo-trabajadores-monton-dinero-efectivo-cohetes-diagramas-barras-flecha-monton-dinero_74855-14166.jpg?w=996&t=st=1673983349~exp=1673983949~hmac=b50c9a1d93c8d39cec56f10df254278c5ab4acba8fb0c9a52e31eede2ebf03bc"
-             alt="" width="300px">
+        <img src="../imagenes/the_star_software.png"
+             alt="" width="250px">
     </center>
     <br>
     <div class="card card-outline card-primary">

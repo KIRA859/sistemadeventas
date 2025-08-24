@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: HILARIWEB
- * Date: 23/1/2023
- * Time: 20:04
- */
+
 
 $id_rol_get = $_GET['id'];
 

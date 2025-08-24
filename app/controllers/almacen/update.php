@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: HILARIWEB
- * Date: 30/1/2023
- * Time: 18:47
- */
-
 include ('../../config.php');
 
 $codigo = $_POST['codigo'];

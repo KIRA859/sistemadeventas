@@ -1,12 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: HILARIWEB
- * Date: 30/1/2023
- * Time: 18:08
- */
-
-
 $id_producto_get = $_GET['id'];
 
 $sql_productos = "SELECT *, cat.nombre_categoria as categoria, u.email as email, u.id_usuario as id_usuario
