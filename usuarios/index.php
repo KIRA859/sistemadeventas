@@ -1,10 +1,7 @@
 <?php
 include ('../app/config.php');
 include ('../layout/sesion.php');
-
 include ('../layout/parte1.php');
-
-
 include ('../app/controllers/usuarios/listado_de_usuarios.php');
 
 

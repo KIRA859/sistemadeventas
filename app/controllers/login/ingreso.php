@@ -27,6 +27,7 @@ if( ($contador > 0) && (password_verify($password_user, $password_user_tabla))  
     echo "Datos correctos";
     session_start();
     $_SESSION['sesion_email'] = $email;
+    $_SESSION['sesion_rol'] = $usuario['id_rol']; //Se guarda el rol
     header('Location: '.$URL.'/index.php');
 }else{
     echo "Datos incorrectos, vuelva a intentarlo";

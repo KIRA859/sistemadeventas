@@ -1,20 +1,28 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-session_start();
 if(isset($_SESSION['sesion_email'])){
-    // echo "si existe sesion de ".$_SESSION['sesion_email'];
     $email_sesion = $_SESSION['sesion_email'];
-    $sql = "SELECT us.id_usuario as id_usuario, us.nombres as nombres, us.email as email, rol.rol as rol 
-                  FROM tb_usuarios as us INNER JOIN tb_roles as rol ON us.id_rol = rol.id_rol WHERE email='$email_sesion'";
+    
+    $sql = "SELECT us.id_usuario, us.nombres, us.email, rol.id_rol, rol.rol
+            FROM tb_usuarios as us 
+            INNER JOIN tb_roles as rol ON us.id_rol = rol.id_rol 
+            WHERE us.email = :email";  // 👈 el placeholder es :email
+    
     $query = $pdo->prepare($sql);
-    $query->execute();
-    $usuarios = $query->fetchAll(PDO::FETCH_ASSOC);
-    foreach ($usuarios as $usuario){
+    $query->execute([':email' => $email_sesion]); // 👈 corregido
+
+    $usuario = $query->fetch(PDO::FETCH_ASSOC);
+
+    if ($usuario) {
         $id_usuario_sesion = $usuario['id_usuario'];
-        $nombres_sesion = $usuario['nombres'];
-        $rol_sesion = $usuario['rol'];
+        $nombres_sesion    = $usuario['nombres'];
+        $rol_sesion        = $usuario['rol'];
+        $_SESSION['sesion_rol'] = $usuario['id_rol']; 
     }
-}else{
-    echo "no existe sesion";
+} else {
     header('Location: '.$URL.'/login');
+    exit;
 }

@@ -1,11 +1,11 @@
 <?php
 include('../app/config.php');
 include('../layout/sesion.php');
-
 include('../layout/parte1.php');
 include('../app/controllers/ventas/listado_de_ventas.php');
 include('../app/controllers/almacen/listado_de_productos.php');
 include('../app/controllers/clientes/listado_de_clientes.php');
+
 
 
 
