@@ -1,97 +1,268 @@
-<?php
-include ('../app/config.php');
-include ('../layout/sesion.php');
-
-include ('../layout/parte1.php');
-
-include ('../app/controllers/roles/listado_de_roles.php');
-
-?>
-
-<!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-12">
-                    <h1 class="m-0">Registro de un nuevo usuario</h1>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
-
-
-    <!-- Main content -->
-    <div class="content">
-        <div class="container-fluid">
-
-            <div class="row">
-                <div class="col-md-5">
-                    <div class="card card-primary">
-                        <div class="card-header">
-                            <h3 class="card-title">Llene los datos con cuidado</h3>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                                </button>
-                            </div>
-
-                        </div>
-
-                        <div class="card-body" style="display: block;">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <form action="../app/controllers/usuarios/create.php" method="post">
-                                        <div class="form-group">
-                                            <label for="">Nombres</label>
-                                            <input type="text" name="nombres" class="form-control" placeholder="Escriba aquí el nombre del nuevo usuario..." required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Email</label>
-                                            <input type="email" name="email" class="form-control" placeholder="Escriba aquí el correo del nuevo usuario..." required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Rol del usurio</label>
-                                            <select name="rol" id="" class="form-control">
-                                                <?php
-                                                foreach ($roles_datos as $roles_dato){?>
-                                                     <option value="<?php echo $roles_dato['id_rol'];?>"><?php echo $roles_dato['rol'];?></option>
-                                                <?php
-                                                }
-                                                ?>
-                                            </select>
-
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Contraseña</label>
-                                            <input type="text" name="password_user" class="form-control" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Repita la Contraseña</label>
-                                            <input type="text" name="password_repeat" class="form-control" required>
-                                        </div>
-                                        <hr>
-                                        <div class="form-group">
-                                            <a href="index.php" class="btn btn-secondary">Cancelar</a>
-                                            <button type="submit" class="btn btn-primary">Guardar</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuarios</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- React y Babel -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        .card {
+            margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .password-strength {
+            height: 5px;
+            margin-top: 5px;
+            border-radius: 5px;
+            background-color: #eee;
+        }
+        .password-strength-bar {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+        .success-animation {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Registro de Nuevo Usuario</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Contenedor para React -->
+                        <div id="root"></div>
                     </div>
                 </div>
             </div>
-
-            <!-- /.row -->
-        </div><!-- /.container-fluid -->
+        </div>
     </div>
-    <!-- /.content -->
-</div>
-<!-- /.content-wrapper -->
 
-<?php include ('../layout/parte2.php'); ?>
+    <!-- Script de React -->
+    <script type="text/babel">
+        const { useState } = React;
 
+        function RegisterForm() {
+            // Estados para el formulario
+            const [formData, setFormData] = useState({
+                nombres: '',
+                email: '',
+                rol: '1',
+                password_user: '',
+                password_repeat: ''
+            });
+            
+            const [errors, setErrors] = useState({});
+            const [isSubmitting, setIsSubmitting] = useState(false);
+            const [message, setMessage] = useState('');
+            const [success, setSuccess] = useState(false);
 
+            // Manejar cambios en los campos
+            const handleChange = (e) => {
+                const { name, value } = e.target;
+                setFormData({
+                    ...formData,
+                    [name]: value
+                });
+                
+                // Limpiar error del campo al cambiar
+                if (errors[name]) {
+                    setErrors({
+                        ...errors,
+                        [name]: ''
+                    });
+                }
+            };
+
+            // Validar formulario
+            const validateForm = () => {
+                const newErrors = {};
+                
+                if (!formData.nombres.trim()) {
+                    newErrors.nombres = 'El nombre es obligatorio';
+                }
+                
+                if (!formData.email.trim()) {
+                    newErrors.email = 'El email es obligatorio';
+                } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+                    newErrors.email = 'El email no es válido';
+                }
+                
+                if (!formData.password_user) {
+                    newErrors.password_user = 'La contraseña es obligatoria';
+                } else if (formData.password_user.length < 6) {
+                    newErrors.password_user = 'La contraseña debe tener al menos 6 caracteres';
+                }
+                
+                if (formData.password_user !== formData.password_repeat) {
+                    newErrors.password_repeat = 'Las contraseñas no coinciden';
+                }
+                
+                setErrors(newErrors);
+                return Object.keys(newErrors).length === 0;
+            };
+
+            // Redirigir al listado de usuarios
+            const redirectToUserList = () => {
+                // Redirigir después de 2 segundos para que el usuario vea el mensaje de éxito
+                setTimeout(() => {
+                    window.location.href = 'index.php'; // Cambia por la URL correcta de tu listado
+                }, 2000);
+            };
+
+            // Manejar envío del formulario
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                
+                if (validateForm()) {
+                    setIsSubmitting(true);
+                    setMessage('');
+                    
+                    try {
+                        // Enviar datos al servidor PHP
+                        const response = await fetch('../app/controllers/usuarios/create.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(formData)
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            setMessage('Usuario registrado con éxito. Redirigiendo...');
+                            setSuccess(true);
+                            // Redirigir al listado de usuarios
+                            redirectToUserList();
+                        } else {
+                            setMessage('Error: ' + data.message);
+                            setSuccess(false);
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        setMessage('Error de conexión. Intente nuevamente.');
+                        setSuccess(false);
+                    } finally {
+                        setIsSubmitting(false);
+                    }
+                }
+            };
+
+            return (
+                <form onSubmit={handleSubmit}>
+                    {message && (
+                        <div className={`alert ${success ? 'alert-success success-animation' : 'alert-danger'}`}>
+                            {message}
+                        </div>
+                    )}
+                    
+                    <div className="mb-3">
+                        <label htmlFor="nombres" className="form-label">Nombres Completos</label>
+                        <input
+                            type="text"
+                            className={`form-control ${errors.nombres ? 'is-invalid' : ''}`}
+                            id="nombres"
+                            name="nombres"
+                            value={formData.nombres}
+                            onChange={handleChange}
+                            placeholder="Escriba aquí el nombre del nuevo usuario..."
+                        />
+                        {errors.nombres && <div className="invalid-feedback">{errors.nombres}</div>}
+                    </div>
+                    
+                    <div className="mb-3">
+                        <label htmlFor="email" className="form-label">Email</label>
+                        <input
+                            type="email"
+                            className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                            id="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            placeholder="Escriba aquí el correo del nuevo usuario..."
+                        />
+                        {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+                    </div>
+                    
+                    <div className="mb-3">
+                        <label htmlFor="rol" className="form-label">Rol del Usuario</label>
+                        <select
+                            className="form-control"
+                            id="rol"
+                            name="rol"
+                            value={formData.rol}
+                            onChange={handleChange}
+                        >
+                            <option value="1">Administrador</option>
+                            <option value="3">Vendedor</option>
+                            <option value="4">Contador</option>
+                            <option value="5">Almacén</option>
+                        </select>
+                    </div>
+                    
+                    <div className="mb-3">
+                        <label htmlFor="password_user" className="form-label">Contraseña</label>
+                        <input
+                            type="password"
+                            className={`form-control ${errors.password_user ? 'is-invalid' : ''}`}
+                            id="password_user"
+                            name="password_user"
+                            value={formData.password_user}
+                            onChange={handleChange}
+                            placeholder="Escriba una contraseña segura..."
+                        />
+                        {errors.password_user && <div className="invalid-feedback">{errors.password_user}</div>}
+                    </div>
+                    
+                    <div className="mb-3">
+                        <label htmlFor="password_repeat" className="form-label">Repita la Contraseña</label>
+                        <input
+                            type="password"
+                            className={`form-control ${errors.password_repeat ? 'is-invalid' : ''}`}
+                            id="password_repeat"
+                            name="password_repeat"
+                            value={formData.password_repeat}
+                            onChange={handleChange}
+                            placeholder="Repita la contraseña..."
+                        />
+                        {errors.password_repeat && <div className="invalid-feedback">{errors.password_repeat}</div>}
+                    </div>
+                    
+                    <div className="d-flex justify-content-between">
+                        <a href="index.php" className="btn btn-secondary">Cancelar</a>
+                        <button 
+                            type="submit" 
+                            className="btn btn-primary"
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? 'Registrando...' : 'Registrar Usuario'}
+                        </button>
+                    </div>
+                </form>
+            );
+        }
+
+        // Renderizar la aplicación React
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<RegisterForm />);
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
