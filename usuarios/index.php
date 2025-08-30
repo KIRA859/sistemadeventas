@@ -2,9 +2,7 @@
 include ('../app/config.php');
 include ('../layout/sesion.php');
 include ('../layout/parte1.php');
-include ('../app/controllers/usuarios/listado_de_usuarios.php');
-
-
+// include ('../app/controllers/usuarios/listado_de_usuarios.php'); 
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -14,7 +12,7 @@ include ('../app/controllers/usuarios/listado_de_usuarios.php');
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-12">
-                    <h1 class="m-0">Listado de usuario</h1>
+                    <h1 class="m-0">Listado de usuarios</h1>
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
@@ -30,7 +28,7 @@ include ('../app/controllers/usuarios/listado_de_usuarios.php');
                 <div class="col-md-12">
                     <div class="card card-outline card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Usuarios registrado</h3>
+                            <h3 class="card-title">Usuarios registrados</h3>
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
                                 </button>
@@ -39,6 +37,7 @@ include ('../app/controllers/usuarios/listado_de_usuarios.php');
                         </div>
 
                         <div class="card-body" style="display: block;">
+                            <!-- La tabla ahora no tiene un tbody, DataTables lo generará -->
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
@@ -49,29 +48,9 @@ include ('../app/controllers/usuarios/listado_de_usuarios.php');
                                     <th><center>Acciones</center></th>
                                 </tr>
                                 </thead>
+                                <!-- El tbody se llenará dinámicamente con JavaScript -->
                                 <tbody>
-                                <?php
-                                $contador = 0;
-                                foreach ($usuarios_datos as $usuarios_dato){
-                                    $id_usuario = $usuarios_dato['id_usuario']; ?>
-                                    <tr>
-                                        <td><center><?php echo $contador = $contador + 1;?></center></td>
-                                        <td><?php echo $usuarios_dato['nombres'];?></td>
-                                        <td><?php echo $usuarios_dato['email'];?></td>
-                                        <td><center><?php echo $usuarios_dato['rol'];?></center></td>
-                                        <td>
-                                            <center>
-                                                <div class="btn-group">
-                                                    <a href="show.php?id=<?php echo $id_usuario; ?>" type="button" class="btn btn-info"><i class="fa fa-eye"></i> Ver</a>
-                                                    <a href="update.php?id=<?php echo $id_usuario; ?>" type="button" class="btn btn-success"><i class="fa fa-pencil-alt"></i> Editar</a>
-                                                    <a href="delete.php?id=<?php echo $id_usuario; ?>" type="button" class="btn btn-danger"><i class="fa fa-trash"></i> Borrar</a>
-                                                </div>
-                                            </center>
-                                        </td>
-                                    </tr>
-                                    <?php
-                                }
-                                ?>
+                                
                                 </tbody>
                                 <tfoot>
                                 <tr>
@@ -103,7 +82,42 @@ include ('../app/controllers/usuarios/listado_de_usuarios.php');
 
 <script>
     $(function () {
+        const APP_BASE_PATH = "/sistema_de_ventas"; 
+
         $("#example1").DataTable({
+            "processing": true,
+            "serverSide": false, // Lo manejaremos del lado del cliente 
+            "ajax": {
+                // Se usa la constante para construir la URL de la API
+                "url": `${APP_BASE_PATH}/api/usuarios/show.php`, 
+                "type": "GET",
+                "dataSrc": "" 
+            },
+            "columns": [
+                // Columna para el número de fila
+                { "data": null, "render": function (data, type, row, meta) {
+                    return meta.row + 1;
+                }, "className": "text-center" },
+                // Columna para los nombres
+                { "data": "nombres" },
+                // Columna para el email
+                { "data": "email" },
+                // Columna para el rol
+                { "data": "rol", "className": "text-center" },
+                // Columna para las acciones
+                { "data": "id_usuario", "render": function (data, type, row) {
+                    return `
+                        <center>
+                            <div class="btn-group">
+                                <a href="${APP_BASE_PATH}/usuarios/show.php?id=${data}" type="button" class="btn btn-info"><i class="fa fa-eye"></i> Ver</a>
+                                <a href="${APP_BASE_PATH}/usuarios/update.php?id=${data}" type="button" class="btn btn-success"><i class="fa fa-pencil-alt"></i> Editar</a>
+                                <a href="${APP_BASE_PATH}/usuarios/delete.php?id=${data}" type="button" class="btn btn-danger"><i class="fa fa-trash"></i> Borrar</a>
+                            </div>
+                        </center>
+                    `;
+                }, "orderable": false, "searchable": false }
+            ],
+            // Traducción y configuración de botones
             "pageLength": 5,
             "language": {
                 "emptyTable": "No hay información",
@@ -129,29 +143,12 @@ include ('../app/controllers/usuarios/listado_de_usuarios.php');
                 extend: 'collection',
                 text: 'Reportes',
                 orientation: 'landscape',
-                buttons: [{
-                    text: 'Copiar',
-                    extend: 'copy',
-                }, {
-                    extend: 'pdf'
-                },{
-                    extend: 'csv'
-                },{
-                    extend: 'excel'
-                },{
-                    text: 'Imprimir',
-                    extend: 'print'
-                }
-                ]
-            },
-                {
-                    extend: 'colvis',
-                    text: 'Visor de columnas',
-                    collectionLayout: 'fixed three-column'
-                }
-            ],
+                buttons: ['copy', 'pdf', 'csv', 'excel', 'print']
+            }, {
+                extend: 'colvis',
+                text: 'Visor de columnas',
+                collectionLayout: 'fixed three-column'
+            }],
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     });
-</script>
-
 </script>

@@ -234,3 +234,13 @@ include('app/controllers/ventas/listado_de_ventas.php')
 <!-- /.content-wrapper -->
 
 <?php include('layout/parte2.php'); ?>
+
+<!--
+usuarios contiene a:
+create.php
+delete_usuarios.php
+listado_de_usuarios.php
+show_usuarios.php
+update_usuarios.php
+update.php
+-->

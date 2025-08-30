@@ -3,65 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Usuarios</title>
+    <title>Registro de Usuario</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- React y Babel -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- React y ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel para JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
-        .card {
-            margin-top: 20px;
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        .password-strength {
-            height: 5px;
-            margin-top: 5px;
-            border-radius: 5px;
-            background-color: #eee;
-        }
-        .password-strength-bar {
-            height: 100%;
-            border-radius: 5px;
-            transition: width 0.3s;
-        }
         .success-animation {
-            animation: fadeIn 0.5s ease-in;
+            animation: fadeOut 5s forwards;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        @keyframes fadeOut {
+            0% {opacity: 1;}
+            70% {opacity: 1;}
+            100% {opacity: 0; display: none;}
+        }
+        h2 {
+            color: #0d6efd;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">Registro de Nuevo Usuario</h4>
-                    </div>
-                    <div class="card-body">
-                        <!-- Contenedor para React -->
-                        <div id="root"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="container">
+        <h2 class="text-center">Registrar Nuevo Usuario</h2>
+        <div id="root"></div>
     </div>
 
-    <!-- Script de React -->
     <script type="text/babel">
+        // Usamos React y ReactDOM desde el global (ya que los cargamos por CDN)
         const { useState } = React;
 
         function RegisterForm() {
-            // Estados para el formulario
             const [formData, setFormData] = useState({
                 nombres: '',
                 email: '',
-                rol: '1',
+                id_rol: '1',
                 password_user: '',
                 password_repeat: ''
             });
@@ -71,24 +61,15 @@
             const [message, setMessage] = useState('');
             const [success, setSuccess] = useState(false);
 
-            // Manejar cambios en los campos
             const handleChange = (e) => {
                 const { name, value } = e.target;
-                setFormData({
-                    ...formData,
-                    [name]: value
-                });
-                
-                // Limpiar error del campo al cambiar
+                setFormData({ ...formData, [name]: value });
+
                 if (errors[name]) {
-                    setErrors({
-                        ...errors,
-                        [name]: ''
-                    });
+                    setErrors({ ...errors, [name]: '' });
                 }
             };
 
-            // Validar formulario
             const validateForm = () => {
                 const newErrors = {};
                 
@@ -116,50 +97,45 @@
                 return Object.keys(newErrors).length === 0;
             };
 
-            // Redirigir al listado de usuarios
             const redirectToUserList = () => {
-                // Redirigir después de 2 segundos para que el usuario vea el mensaje de éxito
                 setTimeout(() => {
-                    window.location.href = 'index.php'; // Cambia por la URL correcta de tu listado
+                    window.location.href = 'index.php'; 
                 }, 2000);
             };
 
-            // Manejar envío del formulario
             const handleSubmit = async (e) => {
                 e.preventDefault();
                 
-                if (validateForm()) {
-                    setIsSubmitting(true);
-                    setMessage('');
-                    
-                    try {
-                        // Enviar datos al servidor PHP
-                        const response = await fetch('../app/controllers/usuarios/create.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(formData)
-                        });
-                        
-                        const data = await response.json();
-                        
-                        if (data.success) {
-                            setMessage('Usuario registrado con éxito. Redirigiendo...');
-                            setSuccess(true);
-                            // Redirigir al listado de usuarios
-                            redirectToUserList();
-                        } else {
-                            setMessage('Error: ' + data.message);
-                            setSuccess(false);
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        setMessage('Error de conexión. Intente nuevamente.');
+                if (!validateForm()) return;
+
+                setIsSubmitting(true);
+                setMessage('');
+                
+                console.log('Datos a enviar:', formData);
+
+                try {
+                    const response = await fetch('../api/usuarios/create.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData)
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        setMessage('Usuario registrado con éxito. Redirigiendo...');
+                        setSuccess(true);
+                        redirectToUserList();
+                    } else {
+                        setMessage('Error: ' + data.message);
                         setSuccess(false);
-                    } finally {
-                        setIsSubmitting(false);
                     }
+                } catch (error) {
+                    console.error('Error:', error);
+                    setMessage('Error de conexión. Intente nuevamente.');
+                    setSuccess(false);
+                } finally {
+                    setIsSubmitting(false);
                 }
             };
 
@@ -203,9 +179,9 @@
                         <label htmlFor="rol" className="form-label">Rol del Usuario</label>
                         <select
                             className="form-control"
-                            id="rol"
-                            name="rol"
-                            value={formData.rol}
+                            id="id_rol"
+                            name="id_rol"
+                            value={formData.id_rol}
                             onChange={handleChange}
                         >
                             <option value="1">Administrador</option>
@@ -257,12 +233,9 @@
             );
         }
 
-        // Renderizar la aplicación React
+        // Renderizar
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<RegisterForm />);
     </script>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

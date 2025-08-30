@@ -1,105 +1,129 @@
 <?php
-include ('../app/config.php');
-include ('../layout/sesion.php');
-
-include ('../layout/parte1.php');
-
-include ('../app/controllers/usuarios/update_usuario.php');
-include ('../app/controllers/roles/listado_de_roles.php');
-
-
+include('../app/config.php');
+include('../layout/sesion.php');
+include('../layout/parte1.php');
 ?>
 
-
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <div class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-12">
-                    <h1 class="m-0">Actualizar usuario</h1>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+            <h1 class="m-0">Actualizar usuario</h1>
+        </div>
     </div>
-    <!-- /.content-header -->
 
-
-    <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
-
             <div class="row">
                 <div class="col-md-5">
                     <div class="card card-success">
                         <div class="card-header">
                             <h3 class="card-title">Llene los datos con cuidado</h3>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                                </button>
-                            </div>
-
                         </div>
+                        <div class="card-body">
+                            <form id="formUpdateUser">
+                                <input type="hidden" name="id_usuario" id="id_usuario"
+                                    value="<?php echo $_GET['id']; ?>">
 
-                        <div class="card-body" style="display: block;">
-                            <div class="row">
-                                <div class="col-md-12">
-
-                                    <form action="../app/controllers/usuarios/update.php" method="post">
-                                        <input type="text" name="id_usuario" value="<?php echo $id_usuario_get; ?>" hidden>
-                                        <div class="form-group">
-                                            <label for="">Nombres</label>
-                                            <input type="text" name="nombres" class="form-control" value="<?php echo $nombres;?>" placeholder="Escriba aquí el nombre del nuevo usuario..." required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Email</label>
-                                            <input type="email" name="email" class="form-control" value="<?php echo $email;?>" placeholder="Escriba aquí el correo del nuevo usuario..." required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Rol del usuario</label>
-                                            <select name="rol" id="" class="form-control">
-                                                <?php
-                                                foreach ($roles_datos as $roles_dato){
-                                                    $rol_tabla = $roles_dato['rol'];
-                                                    $id_rol = $roles_dato['id_rol'];?>
-                                                    <option value="<?php echo $id_rol; ?>"<?php if($rol_tabla == $rol){ ?> selected="selected" <?php } ?> >
-                                                        <?php echo $rol_tabla;?>
-                                                    </option>
-                                                <?php
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Contraseña</label>
-                                            <input type="text" name="password_user" class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Repita la Contraseña</label>
-                                            <input type="text" name="password_repeat" class="form-control">
-                                        </div>
-                                        <hr>
-                                        <div class="form-group">
-                                            <a href="index.php" class="btn btn-secondary">Cancelar</a>
-                                            <button type="submit" class="btn btn-success">Actualizar</button>
-                                        </div>
-                                    </form>
-
+                                <div class="form-group">
+                                    <label>Nombres</label>
+                                    <input type="text" id="nombres" class="form-control" required>
                                 </div>
-                            </div>
-                        </div>
 
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" id="email" class="form-control" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Rol del usuario</label>
+                                    <select id="id_rol" class="form-control"></select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Contraseña</label>
+                                    <input type="password" id="password_user" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Repita la contraseña</label>
+                                    <input type="password" id="password_repeat" class="form-control">
+                                </div>
+
+                                <hr>
+                                <a href="index.php" class="btn btn-secondary">Cancelar</a>
+                                <button type="submit" class="btn btn-success">Actualizar</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- /.row -->
-        </div><!-- /.container-fluid -->
+        </div>
     </div>
-    <!-- /.content -->
 </div>
-<!-- /.content-wrapper -->
 
-<?php include ('../layout/mensajes.php'); ?>
-<?php include ('../layout/parte2.php'); ?>
+<?php include('../layout/mensajes.php'); ?>
+<?php include('../layout/parte2.php'); ?>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const APP_BASE_PATH = "/sistema_de_ventas";
+        const idUsuario = document.getElementById("id_usuario").value;
+
+        // 1. Cargar roles
+        const respRoles = await fetch(`${APP_BASE_PATH}/api/roles/read.php`);
+        const roles = await respRoles.json();
+        let sel = document.getElementById("id_rol");
+        roles.forEach(r => {
+            let opt = document.createElement("option");
+            opt.value = r.id_rol;
+            opt.textContent = r.rol;
+            sel.appendChild(opt);
+        });
+
+        // 2. Cargar datos del usuario
+        const respUser = await fetch(`${APP_BASE_PATH}/api/usuarios/read_one.php?id=${idUsuario}`);
+        const user = await respUser.json();
+        console.log("Usuario cargado:", user);
+
+        document.getElementById("nombres").value = user.nombres;
+        document.getElementById("email").value = user.email;
+        document.getElementById("id_rol").value = user.id_rol;
+
+        // 3. Enviar formulario
+        document.getElementById("formUpdateUser").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const pass = document.getElementById("password_user").value;
+            const passRepeat = document.getElementById("password_repeat").value;
+
+            if (pass && pass !== passRepeat) {
+                alert("Las contraseñas no coinciden.");
+                return;
+            }
+
+            const payload = {
+                id_usuario: idUsuario,
+                nombres: document.getElementById("nombres").value,
+                email: document.getElementById("email").value,
+                id_rol: document.getElementById("id_rol").value,
+                password_user: pass ? pass : null
+            };
+
+            const resp = await fetch(`${APP_BASE_PATH}/api/usuarios/update.php`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await resp.json();
+            if (resp.ok && data.success) {
+                alert("Usuario actualizado correctamente");
+                window.location.href = "index.php";
+            } else {
+                alert("Error: " + data.message);
+            }
+        });
+    });
+</script>

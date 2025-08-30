@@ -1,74 +1,28 @@
 <?php
-
-
-include ('../../config.php');
-
-
-$id_producto = $_GET['id_producto'];
-$nro_compra = $_GET['nro_compra'];
-$fecha_compra = $_GET['fecha_compra'];
-$id_proveedor = $_GET['id_proveedor'];
-$comprobante = $_GET['comprobante'];
-$id_usuario = $_GET['id_usuario'];
-$precio_compra = $_GET['precio_compra'];
-$cantidad_compra = $_GET['cantidad_compra'];
-$stock_total = $_GET['stock_total'];
-
-
-$pdo->beginTransaction();
-
-$sentencia = $pdo->prepare("INSERT INTO tb_compras
-       ( id_producto, nro_compra, fecha_compra, id_proveedor, comprobante, id_usuario, precio_compra, cantidad, fyh_creacion) 
-VALUES (:id_producto,:nro_compra,:fecha_compra,:id_proveedor,:comprobante,:id_usuario,:precio_compra,:cantidad,:fyh_creacion)");
-
-$sentencia->bindParam('id_producto',$id_producto);
-$sentencia->bindParam('nro_compra',$nro_compra);
-$sentencia->bindParam('fecha_compra',$fecha_compra);
-$sentencia->bindParam('id_proveedor',$id_proveedor);
-$sentencia->bindParam('comprobante',$comprobante);
-$sentencia->bindParam('id_usuario',$id_usuario);
-$sentencia->bindParam('precio_compra',$precio_compra);
-$sentencia->bindParam('cantidad',$cantidad_compra);
-$sentencia->bindParam('fyh_creacion',$fechaHora);
-
-if($sentencia->execute()){
-
-    //actualiza el stock desde la compra
-    $sentencia = $pdo->prepare("UPDATE tb_almacen SET stock=:stock WHERE id_producto = :id_producto ");
-    $sentencia->bindParam('stock',$stock_total);
-    $sentencia->bindParam('id_producto',$id_producto);
-    $sentencia->execute();
-
-    $pdo->commit();
-
-    session_start();
-    // echo "se registro correctamente";
-    $_SESSION['mensaje'] = "Se registro la compra de la manera correcta";
-    $_SESSION['icono'] = "success";
-    // header('Location: '.$URL.'/categorias/');
-    ?>
-    <script>
-        location.href = "<?php echo $URL;?>/compras";
-    </script>
-    <?php
-}else{
-
-
-    $pdo->rollBack();
-
-    session_start();
-    $_SESSION['mensaje'] = "Error no se pudo registrar en la base de datos";
-    $_SESSION['icono'] = "error";
-    //  header('Location: '.$URL.'/categorias');
-    ?>
-    <script>
-        location.href = "<?php echo $URL;?>/compras/create.php";
-    </script>
-    <?php
+// Asegúrate de que config.php esté incluido para tener la conexión $pdo
+if (!isset($pdo)) {
+    include ('../../config.php');
 }
 
+// Prepara la consulta SQL para obtener el listado de compras principales,
+// incluyendo el nombre del proveedor y el nombre del usuario que registró la compra.
+$sql_listado_compras = "SELECT
+                            co.id_compra,
+                            co.nro_compra,
+                            co.fecha_compra,
+                            co.total_compra,
+                            co.comprobante,
+                            pr.nombre_proveedor,
+                            u.nombres AS nombre_usuario_compra
+                        FROM tb_compras AS co
+                        INNER JOIN tb_proveedores AS pr ON co.id_proveedor = pr.id_proveedor
+                        INNER JOIN tb_usuarios AS u ON co.id_usuario = u.id_usuario
+                        ORDER BY co.id_compra DESC"; // Ordena las compras de la más reciente a la más antigua
 
+$query_listado_compras = $pdo->prepare($sql_listado_compras);
+$query_listado_compras->execute();
+$compras_consolidadas = $query_listado_compras->fetchAll(PDO::FETCH_ASSOC);
 
-
-
-
+// La variable $compras_consolidadas contendrá ahora un array con cada compra como un elemento,
+// listo para ser utilizado en la vista de listado.
+?>

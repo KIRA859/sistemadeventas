@@ -1,14 +1,10 @@
+<?php ob_start(); // ¡ESTA DEBE SER LA PRIMERA LÍNEA! ?>
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
 <html lang="es">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>The Star software</title>
+    <title>The Star Software</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -73,7 +69,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <img src="<?php echo $URL; ?>/public/templeates/AdminLTE-3.2.0/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block"><?php echo $nombres_sesion; ?></a>
+                        <!-- $nombres_sesion viene de layout/sesion.php -->
+                        <a href="#" class="d-block"><?php echo htmlspecialchars($nombres_sesion ?? 'Invitado'); ?></a>
                     </div>
                 </div>
 
@@ -81,13 +78,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <!-- Add icons to the links using the .nav-icon class
-                        with font-awesome or any other icon font library -->
-
-
-
-
-                        <?php if ($_SESSION['sesion_rol'] == 1): ?>
+                        <?php if (isset($_SESSION['sesion_rol']) && $_SESSION['sesion_rol'] == 1): ?>
                             <li class="nav-item ">
                                 <a href="#" class="nav-link active">
                                     <i class="nav-icon fas fa-users"></i>
@@ -113,12 +104,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </li>
                         <?php endif; ?>
 
-
-
-
-
-
-                        <?php if ($_SESSION['sesion_rol'] == 1): ?>
+                        <?php if (isset($_SESSION['sesion_rol']) && $_SESSION['sesion_rol'] == 1): ?>
                             <li class="nav-item ">
                                 <a href="#" class="nav-link active">
                                     <i class="nav-icon fas fa-address-card"></i>
@@ -144,11 +130,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </li>
                         <?php endif; ?>
 
-
-
-
-
-                        <?php if ($_SESSION['sesion_rol'] == 1): ?>
+                        <?php if (isset($_SESSION['sesion_rol']) && $_SESSION['sesion_rol'] == 1): ?>
                             <li class="nav-item ">
                                 <a href="#" class="nav-link active">
                                     <i class="nav-icon fas fa-tags"></i>
@@ -168,11 +150,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </li>
                         <?php endif; ?>
 
-
-
-
-
-                        <?php if ($_SESSION['sesion_rol'] == 1): ?>
+                        <?php if (isset($_SESSION['sesion_rol']) && $_SESSION['sesion_rol'] == 1): ?>
                             <li class="nav-item ">
                                 <a href="#" class="nav-link active">
                                     <i class="nav-icon fas fa-list"></i>
@@ -194,15 +172,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                             <p>Creación de productos</p>
                                         </a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a href="<?php echo $URL; ?>/almacen/movimientos.php" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Movimientos</p>
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         <?php endif; ?>
 
-
-
-
-
-                        <?php if ($_SESSION['sesion_rol'] == 1): ?>
+                        <?php if (isset($_SESSION['sesion_rol']) && $_SESSION['sesion_rol'] == 1): ?>
                             <li class="nav-item ">
                                 <a href="#" class="nav-link active">
                                     <i class="nav-icon fas fa-cart-plus"></i>
@@ -228,10 +208,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </li>
                         <?php endif; ?>
 
-
-
-                        <?php if ($_SESSION['sesion_rol'] == 1): ?>
-
+                        <?php if (isset($_SESSION['sesion_rol']) && $_SESSION['sesion_rol'] == 1): ?>
                             <li class="nav-item ">
                                 <a href="#" class="nav-link active">
                                     <i class="nav-icon fas fa-car"></i>
@@ -251,13 +228,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </li>
                         <?php endif; ?>
 
-
-
                         <li class="nav-item ">
                             <a href="#" class="nav-link active">
                                 <i class="nav-icon fas fa-shopping-basket"></i>
                                 <p>
-                                    ventas
+                                    Ventas
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
@@ -276,11 +251,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 </li>
                             </ul>
                         </li>
-
-
-
-
-
 
                         <li class="nav-item">
                             <a href="<?php echo $URL; ?>/app/controllers/login/cerrar_sesion.php" class="nav-link" style="background-color: #ca0a0b">
