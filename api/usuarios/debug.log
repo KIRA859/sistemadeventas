@@ -1,0 +1,8 @@
+Array
+(
+    [nombres] => Jose 
+    [email] => jose@gmail.com
+    [id_rol] => 5
+    [password_user] => 12345678
+    [password_repeat] => 12345678
+)

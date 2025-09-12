@@ -37,7 +37,6 @@ include ('../layout/parte1.php');
                         </div>
 
                         <div class="card-body" style="display: block;">
-                            <!-- La tabla ahora no tiene un tbody, DataTables lo generará -->
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
@@ -86,9 +85,8 @@ include ('../layout/parte1.php');
 
         $("#example1").DataTable({
             "processing": true,
-            "serverSide": false, // Lo manejaremos del lado del cliente 
+            "serverSide": false, 
             "ajax": {
-                // Se usa la constante para construir la URL de la API
                 "url": `${APP_BASE_PATH}/api/usuarios/show.php`, 
                 "type": "GET",
                 "dataSrc": "" 
@@ -117,7 +115,6 @@ include ('../layout/parte1.php');
                     `;
                 }, "orderable": false, "searchable": false }
             ],
-            // Traducción y configuración de botones
             "pageLength": 5,
             "language": {
                 "emptyTable": "No hay información",

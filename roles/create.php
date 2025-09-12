@@ -1,8 +1,8 @@
 <?php
-include ('../app/config.php');
-include ('../layout/sesion.php');
+include('../app/config.php');
+include('../layout/sesion.php');
 
-include ('../layout/parte1.php');
+include('../layout/parte1.php');
 
 ?>
 
@@ -40,11 +40,11 @@ include ('../layout/parte1.php');
                         <div class="card-body" style="display: block;">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <form action="../app/controllers/roles/create.php" method="post">
+                                    <form id="formRol">
                                         <div class="form-group">
                                             <label for="">Nombre del Rol</label>
-                                            <input type="text" name="rol" class="form-control"
-                                                   placeholder="Escriba aquí el rol..." required>
+                                            <input type="text" id="rol" name="rol" class="form-control"
+                                                placeholder="Escriba aquí el rol..." required>
                                         </div>
                                         <hr>
                                         <div class="form-group">
@@ -67,5 +67,34 @@ include ('../layout/parte1.php');
 </div>
 <!-- /.content-wrapper -->
 
-<?php include ('../layout/mensajes.php'); ?>
-<?php include ('../layout/parte2.php'); ?>
+<?php include('../layout/mensajes.php'); ?>
+<?php include('../layout/parte2.php'); ?>
+
+
+<script>
+document.getElementById('formRol').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const rol = document.getElementById('rol').value;
+
+    fetch('<?php echo $URL; ?>/api/roles/create.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rol: rol })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        if (data.success) {
+            // Redirigir al listado de roles
+            window.location.href = "<?php echo $URL; ?>/roles/index.php";
+        }
+        
+    })
+    .catch(err => console.error("Error en fetch:", err));
+
+    
+
+
+});
+</script>

@@ -1,11 +1,9 @@
 <?php
-include ('../app/config.php');
-include ('../layout/sesion.php');
+include('../app/config.php');
+include('../layout/sesion.php');
 
-include ('../layout/parte1.php');
-
-
-include ('../app/controllers/roles/listado_de_roles.php');
+include('../layout/parte1.php');
+//include('../app/controllers/roles/listado_de_roles.php');
 
 
 ?>
@@ -44,39 +42,32 @@ include ('../app/controllers/roles/listado_de_roles.php');
                         <div class="card-body" style="display: block;">
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
-                                <tr>
-                                    <th><center>Nro</center></th>
-                                    <th><center>Nombre del rol</center></th>
-                                    <th><center>Acciones</center></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php
-                                $contador = 0;
-                                foreach ($roles_datos as $roles_dato){
-                                    $id_rol = $roles_dato['id_rol']; ?>
                                     <tr>
-                                        <td><center><?php echo $contador = $contador + 1;?></center></td>
-                                        <td><?php echo $roles_dato['rol'];?></td>
-                                        <td>
-                                            <center>
-                                                <div class="btn-group">
-                                                    <a href="update.php?id=<?php echo $id_rol; ?>" type="button" class="btn btn-success">
-                                                        <i class="fa fa-pencil-alt"></i> Editar</a>
-                                                </div>
-                                            </center>
-                                        </td>
+                                        <th>
+                                            <center>Nro</center>
+                                        </th>
+                                        <th>
+                                            <center>Nombre del rol</center>
+                                        </th>
+                                        <th>
+                                            <center>Acciones</center>
+                                        </th>
                                     </tr>
-                                    <?php
-                                }
-                                ?>
+                                </thead>
+                                <tbody id="roles-body">
                                 </tbody>
                                 <tfoot>
-                                <tr>
-                                    <th><center>Nro</center></th>
-                                    <th><center>Nombre del rol</center></th>
-                                    <th><center>Acciones</center></th>
-                                </tr>
+                                    <tr>
+                                        <th>
+                                            <center>Nro</center>
+                                        </th>
+                                        <th>
+                                            <center>Nombre del rol</center>
+                                        </th>
+                                        <th>
+                                            <center>Acciones</center>
+                                        </th>
+                                    </tr>
                                 </tfoot>
                             </table>
                         </div>
@@ -91,14 +82,115 @@ include ('../app/controllers/roles/listado_de_roles.php');
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+<!-- Modal Eliminar -->
+<div class="modal fade" id="modal-delete" tabindex="-1" role="dialog" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="modalDeleteLabel">Eliminar Rol</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <p>¿Está seguro de que desea eliminar este rol?</p>
+                <input type="hidden" id="delete-id-rol">
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="btn-confirm-delete">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php include('../layout/mensajes.php'); ?>
+<?php include('../layout/parte2.php'); ?>
+
+<script>
+    async function cargarRoles() {
+        //Se piden los datos al servidor (API)
+        const resp = await fetch("/sistema_de_ventas/api/roles/read.php")
+        const roles = await resp.json();
+
+        const tbody = document.getElementById("roles-body");
+        tbody.innerHTML = "";
+
+        //Aqui se recorre el JSON recibido
+        roles.forEach((rol, index) => {
+            //Esta funcion crea las filas dinamicamente 
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+            <td><center>${index + 1}</center></td>
+            <td>${rol.rol}</td>
+            <td>
+                <center>
+                    <div class="btn-group">
+                        <a href="update.php?id=${rol.id_rol}" class="btn btn-success">
+                            <i class="fa fa-pencil-alt"></i> Editar
+                        </a>
+                        <button type="button" class="btn btn-danger" 
+                            data-toggle="modal" 
+                            data-target="#modal-delete"
+                            onclick="setDeleteId(${rol.id_rol})">
+                            <i class="fa fa-trash"></i> Eliminar
+                        </button>
+                    </div>
+                </center>
+            </td>
+        `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // Llamar al cargar la página
+    cargarRoles();
+
+    function setDeleteId(id) {
+        document.getElementById("delete-id-rol").value = id;
+    }
+
+    document.getElementById("btn-confirm-delete").addEventListener("click", async function() {
+        const idRol = document.getElementById("delete-id-rol").value;
+
+        if (!idRol) return;
+
+        try {
+            const resp = await fetch("/sistema_de_ventas/api/roles/delete.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id_rol: idRol
+                })
+            });
+
+            const data = await resp.json();
+            console.log(data)
+            
+
+            if (data.success) {
+                $('#modal-delete').modal('hide');
+                cargarRoles(); // refresca la tabla
+            } else {
+                alert("Error: " + data.message);
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Error al eliminar el rol");
+        }
+    });
+</script>
 
 
-<?php include ('../layout/mensajes.php'); ?>
-<?php include ('../layout/parte2.php'); ?>
 
 
 <script>
-    $(function () {
+    $(function() {
         $("#example1").DataTable({
             "pageLength": 5,
             "language": {
@@ -120,26 +212,27 @@ include ('../app/controllers/roles/listado_de_roles.php');
                     "previous": "Anterior"
                 }
             },
-            "responsive": true, "lengthChange": true, "autoWidth": false,
+            "responsive": true,
+            "lengthChange": true,
+            "autoWidth": false,
             buttons: [{
-                extend: 'collection',
-                text: 'Reportes',
-                orientation: 'landscape',
-                buttons: [{
-                    text: 'Copiar',
-                    extend: 'copy',
-                }, {
-                    extend: 'pdf'
-                },{
-                    extend: 'csv'
-                },{
-                    extend: 'excel'
-                },{
-                    text: 'Imprimir',
-                    extend: 'print'
-                }
-                ]
-            },
+                    extend: 'collection',
+                    text: 'Reportes',
+                    orientation: 'landscape',
+                    buttons: [{
+                        text: 'Copiar',
+                        extend: 'copy',
+                    }, {
+                        extend: 'pdf'
+                    }, {
+                        extend: 'csv'
+                    }, {
+                        extend: 'excel'
+                    }, {
+                        text: 'Imprimir',
+                        extend: 'print'
+                    }]
+                },
                 {
                     extend: 'colvis',
                     text: 'Visor de columnas',
@@ -148,6 +241,4 @@ include ('../app/controllers/roles/listado_de_roles.php');
             ],
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     });
-</script>
-
 </script>

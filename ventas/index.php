@@ -2,193 +2,118 @@
 include('../app/config.php');
 include('../layout/sesion.php');
 include('../layout/parte1.php');
-
-// Incluimos el controlador para obtener todas las ventas
-include('../app/controllers/ventas/listado_de_ventas.php');
 ?>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-12">
-                    <h1 class="m-0">Listado de ventas realizadas</h1>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+                <div class="col-sm-12 d-flex justify-content-between align-items-center">
+                    <h1 class="m-0"><i class="fas fa-cash-register mr-2"></i>Listado de Ventas</h1>
+                    <a href="create.php" class="btn btn-success btn-sm">
+                        <i class="fas fa-plus-circle mr-1"></i> Nueva Venta
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- /.content-header -->
 
     <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
 
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card card-outline card-primary">
-                        <div class="card-header">
-                            <h3 class="card-title">Ventas Registradas</h3>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                                </button>
-                            </div>
+            <!-- Summary Cards -->
+            <div class="row mb-4">
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3 id="total-ventas">0</h3>
+                            <p>Total Ventas</p>
                         </div>
-
-                        <div class="card-body" style="display: block;">
-                            <div class="table table-responsive">
-                                <table id="example1" class="table table-bordered table-striped table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th><center>Nro</center></th>
-                                            <th><center>Nro de Venta</center></th>
-                                            <th><center>Fecha Venta</center></th>
-                                            <th><center>Cliente</center></th>
-                                            <th><center>Total Pagado</center></th>
-                                            <th><center>Productos</center></th>
-                                            <th><center>Acciones</center></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        $contador = 0;
-                                        foreach ($ventas_datos as $ventas_dato) {
-                                            $id_venta = $ventas_dato['id_venta'];
-                                            $id_cliente = $ventas_dato['id_cliente'];
-                                            $contador++;
-                                        ?>
-                                            <tr>
-                                                <td><center><?php echo htmlspecialchars($contador); ?></center></td>
-                                                <td><center><?php echo htmlspecialchars($ventas_dato['nro_venta']); ?></center></td>
-                                                <td><center><?php echo htmlspecialchars($ventas_dato['fecha_venta']); ?></center></td>
-                                                <td>
-                                                    <center>
-                                                        <!-- Modal de clientes existente -->
-                                                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal_clientes<?php echo htmlspecialchars($id_venta); ?>">
-                                                            <i class="fa fa-user "></i> <?php echo htmlspecialchars($ventas_dato['nombre_cliente']); ?>
-                                                        </button>
-
-                                                        <div class="modal fade" id="modal_clientes<?php echo htmlspecialchars($id_venta); ?>" tabindex="-1" aria-labelledby="modalClienteLabel<?php echo htmlspecialchars($id_venta); ?>" aria-hidden="true">
-                                                            <div class="modal-dialog modal-sm">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header" style="background-color: #cd6b25ff;color: white">
-                                                                        <h4 class="modal-title" id="modalClienteLabel<?php echo htmlspecialchars($id_venta); ?>"><i class="fa fa-user"></i> Cliente</h4>
-                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                    </div>
-                                                                    <?php
-                                                                    // Obtener datos del cliente para el modal
-                                                                    $sql_clientes_modal = "SELECT * FROM tb_clientes WHERE id_cliente = :id_cliente";
-                                                                    $query_clientes_modal = $pdo->prepare($sql_clientes_modal);
-                                                                    $query_clientes_modal->bindParam(':id_cliente', $id_cliente, PDO::PARAM_INT);
-                                                                    $query_clientes_modal->execute();
-                                                                    $clientes_dato_modal = $query_clientes_modal->fetch(PDO::FETCH_ASSOC);
-
-                                                                    $nombre_cliente_modal = $clientes_dato_modal['nombre_cliente'] ?? 'N/A';
-                                                                    $nit_ci_cliente_modal = $clientes_dato_modal['nit_ci_cliente'] ?? 'N/A';
-                                                                    $celular_cliente_modal = $clientes_dato_modal['celular_cliente'] ?? 'N/A';
-                                                                    $email_cliente_modal = $clientes_dato_modal['email_cliente'] ?? 'N/A';
-                                                                    ?>
-                                                                    <div class="modal-body">
-                                                                        <div class="form-group">
-                                                                            <label><i class="fa fa-user"></i> Nombre del cliente</label>
-                                                                            <input type="text" value="<?php echo htmlspecialchars($nombre_cliente_modal); ?>" class="form-control" disabled>
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <label>NIT/CI del cliente</label>
-                                                                            <input type="text" value="<?php echo htmlspecialchars($nit_ci_cliente_modal); ?>" class="form-control" disabled>
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <label>Celular del cliente</label>
-                                                                            <input type="text" value="<?php echo htmlspecialchars($celular_cliente_modal); ?>" class="form-control" disabled>
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <label>Correo del cliente</label>
-                                                                            <input type="email" value="<?php echo htmlspecialchars($email_cliente_modal); ?>" class="form-control" disabled>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer justify-content-between">
-                                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </center>
-                                                </td>
-                                                <td>
-                                                    <center>
-                                                        <button class="btn btn-primary "><?php echo "COP$" . htmlspecialchars(number_format($ventas_dato['total_pagado'], 2)); ?></button>
-                                                    </center>
-                                                </td>
-                                                <td>
-                                                    <center>
-                                                        <!-- Botón para abrir el modal de productos de la venta (AJAX) -->
-                                                        <button type="button" class="btn btn-primary btn-sm view-products-btn" data-toggle="modal" data-target="#modal_productos_venta" data-id_venta="<?php echo htmlspecialchars($id_venta); ?>" data-nro_venta="<?php echo htmlspecialchars($ventas_dato['nro_venta']); ?>">
-                                                            <i class="fa fa-shopping-basket"></i> Ver Productos
-                                                        </button>
-                                                    </center>
-                                                </td>
-                                                <td>
-                                                    <center>
-                                                        <!-- Formulario para borrar la venta (POST) -->
-                                                        <form action="../app/controllers/ventas/delete_venta.php" method="post" style="display:inline-block;" onsubmit="return confirm('¿Está seguro de que desea eliminar la venta Nro <?php echo htmlspecialchars($ventas_dato['nro_venta']); ?>? Esta acción es irreversible y revertirá el stock de productos.');">
-                                                            <input type="hidden" name="id_venta" value="<?php echo htmlspecialchars($id_venta); ?>">
-                                                            <button type="submit" class="btn btn-danger btn-sm" title="Eliminar Venta"><i class="fa fa-trash"></i> Borrar</button>
-                                                        </form>
-
-                                                        <!-- Enlace para imprimir la factura (factura.php) -->
-                                                        <a href="factura.php?id_venta=<?php echo htmlspecialchars($id_venta); ?>" class="btn btn-success btn-sm" title="Imprimir Factura" target="_blank"><i class="fa fa-print"></i> Imprimir</a>
-                                                    </center>
-                                                </td>
-                                            </tr>
-                                        <?php } ?>
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="icon"><i class="fas fa-shopping-cart"></i></div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3 id="monto-total">COP$ 0.00</h3>
+                            <p>Total Vendido</p>
                         </div>
+                        <div class="icon"><i class="fas fa-dollar-sign"></i></div>
                     </div>
                 </div>
             </div>
-            <!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content -->
-</div>
-<!-- /.content-wrapper -->
 
-<!-- MODAL para visualizar los productos de una venta específica (cargado via AJAX) -->
-<div class="modal fade" id="modal_productos_venta" tabindex="-1" aria-labelledby="modalProductosVentaLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+            <!-- Tabla de ventas -->
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-list mr-1"></i>Ventas Registradas</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="tabla-ventas" class="table table-hover table-striped">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">Nro Venta</th>
+                                    <th class="text-center">Fecha</th>
+                                    <th class="text-center">Cliente</th>
+                                    <th class="text-center">Total</th>
+                                    <th class="text-center">Productos</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ventas-body">
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted">
+                                        <i class="fas fa-spinner fa-spin"></i> Cargando ventas...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal Productos -->
+<div class="modal fade" id="modal_productos_venta" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header" style="background-color: #08c2ec;color: white">
-                <h5 class="modal-title" id="modalProductosVentaLabel">Productos de la Venta Nro: <span id="modal_nro_venta_display"></span></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title"><i class="fas fa-boxes mr-2"></i>Productos de la Venta</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
             </div>
             <div class="modal-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle mr-2"></i>Venta Nro: <strong id="modal_nro_venta_display"></strong>
+                </div>
                 <div class="table-responsive">
-                    <table class="table table-bordered table-sm table-hover table-striped">
-                        <thead>
+                    <table class="table table-bordered">
+                        <thead class="bg-light">
                             <tr>
-                                <th style="background-color: #e7e7e7;text-align:center;">Nro</th>
-                                <th style="background-color: #e7e7e7;text-align:center;">Producto</th>
-                                <th style="background-color: #e7e7e7;text-align:center;">Descripción</th>
-                                <th style="background-color: #e7e7e7;text-align:center;">Cantidad</th>
-                                <th style="background-color: #e7e7e7;text-align:center;">Precio Unitario</th>
-                                <th style="background-color: #e7e7e7;text-align:center;">SubTotal</th>
+                                <th>#</th>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Subtotal</th>
                             </tr>
                         </thead>
                         <tbody id="modal_productos_body">
-                            <!-- Los productos se cargarán aquí vía AJAX -->
+                            <tr><td colspan="5" class="text-center">Seleccione una venta...</td></tr>
                         </tbody>
+                        <tfoot>
+                            <tr class="table-success">
+                                <td colspan="4" class="text-right">Total:</td>
+                                <td id="modal_total_venta">COP$ 0.00</td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
@@ -198,111 +123,93 @@ include('../app/controllers/ventas/listado_de_ventas.php');
 <?php include('../layout/parte2.php'); ?>
 
 <script>
-    $(function() {
-        $("#example1").DataTable({
-            "pageLength": 5,
-            "language": {
-                "emptyTable": "No hay información",
-                "info": "Mostrando _START_ a _END_ de _TOTAL_ Ventas",
-                "infoEmpty": "Mostrando 0 a 0 de 0 Ventas",
-                "infoFiltered": "(Filtrado de _MAX_ total Ventas)",
-                "infoPostFix": "",
-                "thousands": ".",
-                "lengthMenu": "Mostrar _MENU_ Ventas",
-                "loadingRecords": "Cargando...",
-                "processing": "Procesando...",
-                "search": "Buscador:",
-                "zeroRecords": "Sin resultados encontrados",
-                "paginate": {
-                    "first": "Primero",
-                    "last": "Ultimo",
-                    "next": "Siguiente",
-                    "previous": "Anterior"
-                }
-            },
-            "responsive": true,
-            "lengthChange": true,
-            "autoWidth": false,
-            buttons: [{
-                extend: 'collection',
-                text: 'Reportes',
-                orientation: 'landscape',
-                buttons: [{
-                    text: 'Copiar',
-                    extend: 'copy',
-                }, {
-                    extend: 'pdf',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4] // Columnas a exportar para PDF
-                    }
-                }, {
-                    extend: 'csv',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4]
-                    }
-                }, {
-                    extend: 'excel',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4]
-                    }
-                }, {
-                    text: 'Imprimir',
-                    extend: 'print',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4]
-                    }
-                }]
-            }, {
-                extend: 'colvis',
-                text: 'Visor de columnas',
-                collectionLayout: 'fixed three-column'
-            }],
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+$(document).ready(function () {
+    // === Cargar ventas desde API ===
+    fetch("../api/ventas/listar.php")
+      .then(res => res.json())
+      .then(json => {
+          console.log("Respuesta API:", json);
 
+          if (json.status === "success" && Array.isArray(json.data)) {
+              let ventas = json.data;
+              let tbody = $("#ventas-body");
+              tbody.empty();
 
-        // Evento para cargar productos en el modal de productos de la venta (AJAX)
-        $(document).on('click', '.view-products-btn', function() {
-            var id_venta = $(this).data('id_venta');
-            var nro_venta = $(this).data('nro_venta');
+              let totalVendido = 0;
 
-            $('#modal_nro_venta_display').text(nro_venta);
-            $('#modal_productos_body').empty(); // Limpiar contenido anterior
+              ventas.forEach((venta, i) => {
+                  totalVendido += parseFloat(venta.total_pagado);
 
-            // Realizar una llamada AJAX para obtener los productos de esta venta
-            $.ajax({
-                url: '../app/controllers/ventas/cargar_productos_venta_ajax.php', // Controlador AJAX
-                type: 'GET',
-                data: { id_venta: id_venta },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status === 'success' && response.data.length > 0) {
-                        var productosHtml = '';
-                        var contador_modal_prod = 0;
-                        $.each(response.data, function(index, producto) {
-                            contador_modal_prod++;
-                            var subtotal = parseFloat(producto.cantidad) * parseFloat(producto.precio_unitario);
-                            productosHtml += `
-                                <tr>
-                                    <td>${contador_modal_prod}</td>
-                                    <td>${producto.nombre_producto}</td>
-                                    <td>${producto.descripcion_producto}</td>
-                                    <td>${producto.cantidad}</td>
-                                    <td>COP$${parseFloat(producto.precio_unitario).toFixed(2)}</td>
-                                    <td>COP$${subtotal.toFixed(2)}</td>
-                                </tr>
-                            `;
-                        });
-                        $('#modal_productos_body').html(productosHtml);
-                    } else {
-                        $('#modal_productos_body').html('<tr><td colspan="6"><center>No hay productos para esta venta.</center></td></tr>');
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.error("Error al cargar productos de la venta (AJAX):", textStatus, errorThrown);
-                    console.error("Respuesta del servidor:", jqXHR.responseText);
-                    $('#modal_productos_body').html('<tr><td colspan="6"><center>Error al cargar los productos.</center></td></tr>');
-                }
+                  tbody.append(`
+                      <tr>
+                          <td class="text-center">${i + 1}</td>
+                          <td class="text-center"><span class="badge badge-primary">${venta.nro_venta}</span></td>
+                          <td class="text-center">
+                              <small>${venta.fecha_venta}</small>
+                          </td>
+                          <td class="text-center">${venta.nombre_cliente}</td>
+                          <td class="text-center">
+                              <span class="badge badge-success">COP$ ${parseFloat(venta.total_pagado).toFixed(2)}</span>
+                          </td>
+                          <td class="text-center">
+                              <button class="btn btn-outline-primary btn-sm ver-productos"
+                                  data-nro="${venta.nro_venta}" 
+                                  data-productos='${JSON.stringify(venta.productos || [])}'>
+                                  <i class="fas fa-boxes"></i> Ver
+                              </button>
+                          </td>
+                          <td class="text-center">
+                              <a href="factura.php?id_venta=${venta.id_venta}" 
+                                 target="_blank" 
+                                 class="btn btn-outline-success btn-sm">
+                                  <i class="fas fa-print"></i>
+                              </a>
+                          </td>
+                      </tr>
+                  `);
+              });
+
+              $("#total-ventas").text(ventas.length);
+              $("#monto-total").text("COP$ " + totalVendido.toFixed(2));
+          } else {
+              $("#ventas-body").html(`<tr><td colspan="7" class="text-center text-danger">${json.message || "Error en la API"}</td></tr>`);
+          }
+      })
+      .catch(err => {
+          console.error("Error al consumir API:", err);
+          $("#ventas-body").html(`<tr><td colspan="7" class="text-center text-danger">No se pudo conectar a la API</td></tr>`);
+      });
+
+    // === Ver productos de la venta ===
+    $(document).on("click", ".ver-productos", function () {
+        let nroVenta = $(this).data("nro");
+        let productos = $(this).data("productos");
+
+        $("#modal_nro_venta_display").text(nroVenta);
+        let tbody = $("#modal_productos_body");
+        tbody.empty();
+
+        let total = 0;
+        if (Array.isArray(productos) && productos.length > 0) {
+            productos.forEach((p, i) => {
+                let subtotal = p.cantidad * p.precio_unitario;
+                total += subtotal;
+                tbody.append(`
+                    <tr>
+                        <td>${i + 1}</td>
+                        <td>${p.nombre_producto}</td>
+                        <td class="text-center">${p.cantidad}</td>
+                        <td class="text-right">COP$ ${parseFloat(p.precio_unitario).toFixed(2)}</td>
+                        <td class="text-right">COP$ ${subtotal.toFixed(2)}</td>
+                    </tr>
+                `);
             });
-        });
+        } else {
+            tbody.append(`<tr><td colspan="5" class="text-center text-muted">No hay productos registrados</td></tr>`);
+        }
+
+        $("#modal_total_venta").text("COP$ " + total.toFixed(2));
+        $("#modal_productos_venta").modal("show");
     });
+});
 </script>

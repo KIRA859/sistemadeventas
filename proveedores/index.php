@@ -1,493 +1,281 @@
 <?php
-include ('../app/config.php');
-include ('../layout/sesion.php');
-
-include ('../layout/parte1.php');
-
-
-include ('../app/controllers/proveedores/listado_de_proveedores.php');
-
-
+include('../app/config.php');
+include('../layout/sesion.php');
+include('../layout/parte1.php');
 ?>
 
-<!-- Content Wrapper. Contains page content -->
+<!-- Content Wrapper -->
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
+    <!-- Header -->
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-12">
-                    <h1 class="m-0">Listado de Proveedores
+                    <h1 class="m-0">
+                        Listado de Proveedores
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-create">
                             <i class="fa fa-plus"></i> Agregar Nuevo
                         </button>
                     </h1>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- /.content-header -->
-
 
     <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
-
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-outline card-primary">
                         <div class="card-header">
                             <h3 class="card-title">Proveedores registrados</h3>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                                </button>
-                            </div>
-
                         </div>
-
-                        <div class="card-body" style="display: block;">
-                            <table id="example1" class="table table-bordered table-striped table-sm">
+                        <div class="card-body">
+                            <table id="tablaProveedores" class="table table-bordered table-striped table-sm">
                                 <thead>
-                                <tr>
-                                    <th><center>Nro</center></th>
-                                    <th><center>Nombre del proveedor</center></th>
-                                    <th><center>Celular</center></th>
-                                    <th><center>Teléfono</center></th>
-                                    <th><center>Empresa</center></th>
-                                    <th><center>Email</center></th>
-                                    <th><center>Dirección</center></th>
-                                    <th><center>Acciones</center></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php
-                                $contador = 0;
-                                foreach ($proveedores_datos as $proveedores_dato){
-                                    $id_proveedor = $proveedores_dato['id_proveedor'];
-                                    $nombre_proveedor = $proveedores_dato['nombre_proveedor']; ?>
                                     <tr>
-                                        <td><center><?php echo $contador = $contador + 1;?></center></td>
-                                        <td><?php echo $nombre_proveedor;?></td>
-                                        <td>
-                                            <a href="https://wa.me/591<?php echo $proveedores_dato['celular'];?>" target="_blank" class="btn btn-success">
-                                                <i class="fa fa-phone"></i>
-                                                <?php echo $proveedores_dato['celular'];?>
-                                            </a>
-                                        </td>
-                                        <td><?php echo $proveedores_dato['telefono'];?></td>
-                                        <td><?php echo $proveedores_dato['empresa'];?></td>
-                                        <td><?php echo $proveedores_dato['email'];?></td>
-                                        <td><?php echo $proveedores_dato['direccion'];?></td>
-                                        <td>
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn btn-success" data-toggle="modal"
-                                                            data-target="#modal-update<?php echo $id_proveedor;?>">
-                                                        <i class="fa fa-pencil-alt"></i> Editar
-                                                    </button>
-                                                    <!-- modal para actualizar proveedor -->
-                                                    <div class="modal fade" id="modal-update<?php echo $id_proveedor;?>">
-                                                        <div class="modal-dialog">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header" style="background-color: #116f4a;color: white">
-                                                                    <h4 class="modal-title">Actualización del proveedor</h4>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-body">
-
-                                                                    <div class="row">
-                                                                        <div class="col-md-6">
-                                                                            <div class="form-group">
-                                                                                <label for="">Nombre del proveedor <b>*</b></label>
-                                                                                <input type="text" id="nombre_proveedor<?php echo $id_proveedor;?>" value="<?php echo $nombre_proveedor;?>" class="form-control">
-                                                                                <small style="color: red;display: none" id="lbl_nombre<?php echo $id_proveedor;?>">* Este campo es requerido</small>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-6">
-                                                                            <div class="form-group">
-                                                                                <label for="">Celular <b>*</b></label>
-                                                                                <input type="number" id="celular<?php echo $id_proveedor;?>" value="<?php echo $proveedores_dato['celular'];?>" class="form-control">
-                                                                                <small style="color: red;display: none" id="lbl_celular<?php echo $id_proveedor;?>">* Este campo es requerido</small>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="row">
-                                                                        <div class="col-md-6">
-                                                                            <div class="form-group">
-                                                                                <label for="">Teléfono</label>
-                                                                                <input type="number" id="telefono<?php echo $id_proveedor;?>" value="<?php echo $proveedores_dato['telefono'];?>" class="form-control">
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-6">
-                                                                            <div class="form-group">
-                                                                                <label for="">Empresa <b>*</b></label>
-                                                                                <input type="text" id="empresa<?php echo $id_proveedor;?>" value="<?php echo $proveedores_dato['empresa'];?>" class="form-control">
-                                                                                <small style="color: red;display: none" id="lbl_empresa<?php echo $id_proveedor;?>">* Este campo es requerido</small>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="row">
-                                                                        <div class="col-md-6">
-                                                                            <div class="form-group">
-                                                                                <label for="">Email</label>
-                                                                                <input type="email" id="email<?php echo $id_proveedor;?>" value="<?php echo $proveedores_dato['email'];?>" class="form-control">
-                                                                                <small style="color: red;display: none" id="lbl_email<?php echo $id_proveedor;?>">* Este campo es requerido</small>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-6">
-                                                                            <div class="form-group">
-                                                                                <label for="">Dirección <b>*</b></label>
-                                                                                <textarea name="" id="direccion<?php echo $id_proveedor;?>" cols="30" rows="3" class="form-control"><?php echo $proveedores_dato['direccion'];?></textarea>
-                                                                                <small style="color: red;display: none" id="lbl_direccion<?php echo $id_proveedor;?>">* Este campo es requerido</small>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
-                                                                <div class="modal-footer justify-content-between">
-                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                                                                    <button type="button" class="btn btn-success" id="btn_update<?php echo $id_proveedor;?>">Actualizar</button>
-                                                                </div>
-                                                            </div>
-                                                            <!-- /.modal-content -->
-                                                        </div>
-                                                        <!-- /.modal-dialog -->
-                                                    </div>
-                                                    <!-- /.modal -->
-                                                    <script>
-                                                        $('#btn_update<?php echo $id_proveedor;?>').click(function () {
-
-                                                            var id_proveedor = '<?php echo $id_proveedor;?>';
-                                                            var nombre_proveedor = $('#nombre_proveedor<?php echo $id_proveedor;?>').val();
-                                                            var celular = $('#celular<?php echo $id_proveedor;?>').val();
-                                                            var telefono = $('#telefono<?php echo $id_proveedor;?>').val();
-                                                            var empresa = $('#empresa<?php echo $id_proveedor;?>').val();
-                                                            var email = $('#email<?php echo $id_proveedor;?>').val();
-                                                            var direccion = $('#direccion<?php echo $id_proveedor;?>').val();
-
-                                                            if(nombre_proveedor == ""){
-                                                                $('#nombre_proveedor<?php echo $id_proveedor;?>').focus();
-                                                                $('#lbl_nombre<?php echo $id_proveedor;?>').css('display','block');
-                                                            }else if(celular == ""){
-                                                                $('#celular<?php echo $id_proveedor;?>').focus();
-                                                                $('#lbl_celular<?php echo $id_proveedor;?>').css('display','block');
-                                                            }else if(empresa == ""){
-                                                                $('#empresa<?php echo $id_proveedor;?>').focus();
-                                                                $('#lbl_empresa<?php echo $id_proveedor;?>').css('display','block');
-                                                            }else if(direccion == ""){
-                                                                $('#direccion<?php echo $id_proveedor;?>').focus();
-                                                                $('#lbl_direccion<?php echo $id_proveedor;?>').css('display','block');
-                                                            }
-                                                            else {
-                                                                var url = "../app/controllers/proveedores/update.php";
-                                                                $.get(url,{id_proveedor:id_proveedor,nombre_proveedor:nombre_proveedor,celular:celular,telefono:telefono,empresa:empresa,email:email,direccion:direccion},function (datos) {
-                                                                    $('#respuesta').html(datos);
-                                                                });
-                                                            }
-
-                                                        });
-                                                    </script>
-                                                    <div id="respuesta_update<?php echo $id_proveedor;?>"></div>
-                                                </div>
-
-
-
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                        data-target="#modal-delete<?php echo $id_proveedor;?>">
-                                                    <i class="fa fa-trash"></i> Borrar
-                                                </button>
-                                                <!-- modal para borrar proveedore -->
-                                                <div class="modal fade" id="modal-delete<?php echo $id_proveedor;?>">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header" style="background-color: #ca0a0b;color: white">
-                                                                <h4 class="modal-title">¿Esta seguro de eliminar al proveedor?</h4>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-
-                                                                <div class="row">
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group">
-                                                                            <label for="">Nombre del proveedor <b>*</b></label>
-                                                                            <input type="text" id="nombre_proveedor<?php echo $id_proveedor;?>" value="<?php echo $nombre_proveedor;?>" class="form-control" disabled>
-                                                                            <small style="color: red;display: none" id="lbl_nombre<?php echo $id_proveedor;?>">* Este campo es requerido</small>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group">
-                                                                            <label for="">Celular <b>*</b></label>
-                                                                            <input type="number" id="celular<?php echo $id_proveedor;?>" value="<?php echo $proveedores_dato['celular'];?>" class="form-control" disabled>
-                                                                            <small style="color: red;display: none" id="lbl_celular<?php echo $id_proveedor;?>">* Este campo es requerido</small>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="row">
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group">
-                                                                            <label for="">Teléfono</label>
-                                                                            <input type="number" id="telefono<?php echo $id_proveedor;?>" value="<?php echo $proveedores_dato['telefono'];?>" class="form-control" disabled>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group">
-                                                                            <label for="">Empresa <b>*</b></label>
-                                                                            <input type="text" id="empresa<?php echo $id_proveedor;?>" value="<?php echo $proveedores_dato['empresa'];?>" class="form-control" disabled>
-                                                                            <small style="color: red;display: none" id="lbl_empresa<?php echo $id_proveedor;?>">* Este campo es requerido</small>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="row">
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group">
-                                                                            <label for="">Email</label>
-                                                                            <input type="email" id="email<?php echo $id_proveedor;?>" value="<?php echo $proveedores_dato['email'];?>" class="form-control" disabled>
-                                                                            <small style="color: red;display: none" id="lbl_email<?php echo $id_proveedor;?>">* Este campo es requerido</small>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group">
-                                                                            <label for="">Dirección <b>*</b></label>
-                                                                            <textarea name="" id="direccion<?php echo $id_proveedor;?>" cols="30" rows="3" class="form-control" disabled><?php echo $proveedores_dato['direccion'];?></textarea>
-                                                                            <small style="color: red;display: none" id="lbl_direccion<?php echo $id_proveedor;?>">* Este campo es requerido</small>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
-                                                            <div class="modal-footer justify-content-between">
-                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                                                                <button type="button" class="btn btn-danger" id="btn_delete<?php echo $id_proveedor;?>">Eliminar</button>
-                                                            </div>
-                                                            <div id="respuesta_delete<?php echo $id_proveedor;?>"></div>
-                                                        </div>
-                                                        <!-- /.modal-content -->
-                                                    </div>
-                                                    <!-- /.modal-dialog -->
-                                                </div>
-                                                <!-- /.modal -->
-                                                <script>
-                                                    $('#btn_delete<?php echo $id_proveedor;?>').click(function () {
-
-                                                        var id_proveedor = '<?php echo $id_proveedor;?>';
-
-                                                            var url2 = "../app/controllers/proveedores/delete.php";
-                                                            $.get(url2,{id_proveedor:id_proveedor},function (datos) {
-                                                                $('#respuesta_delete<?php echo $id_proveedor;?>').html(datos);
-                                                            });
-
-
-                                                    });
-                                                </script>
-
-                                            </div>
-
-                                        </td>
+                                        <th>Nro</th>
+                                        <th>Nombre</th>
+                                        <th>Celular</th>
+                                        <th>Teléfono</th>
+                                        <th>Empresa</th>
+                                        <th>Email</th>
+                                        <th>Dirección</th>
+                                        <th>Acciones</th>
                                     </tr>
-                                    <?php
-                                }
-                                ?>
+                                </thead>
+                                <tbody id="tbodyProveedores">
+                                    <!-- Se carga con JS -->
                                 </tbody>
                             </table>
                         </div>
-
                     </div>
                 </div>
             </div>
+        </div>
+    </div> <!-- /.content -->
+</div> <!-- /.content-wrapper -->
 
-            <!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content -->
-</div>
-<!-- /.content-wrapper -->
+<?php include('../layout/mensajes.php'); ?>
+<?php include('../layout/parte2.php'); ?>
 
-
-<?php include ('../layout/mensajes.php'); ?>
-<?php include ('../layout/parte2.php'); ?>
-
-
-<script>
-    $(function () {
-        $("#example1").DataTable({
-            "pageLength": 5,
-            "language": {
-                "emptyTable": "No hay información",
-                "info": "Mostrando _START_ a _END_ de _TOTAL_ Proveedores",
-                "infoEmpty": "Mostrando 0 a 0 de 0 Proveedores",
-                "infoFiltered": "(Filtrado de _MAX_ total Proveedores)",
-                "infoPostFix": "",
-                "thousands": ",",
-                "lengthMenu": "Mostrar _MENU_ Proveedores",
-                "loadingRecords": "Cargando...",
-                "processing": "Procesando...",
-                "search": "Buscador:",
-                "zeroRecords": "Sin resultados encontrados",
-                "paginate": {
-                    "first": "Primero",
-                    "last": "Ultimo",
-                    "next": "Siguiente",
-                    "previous": "Anterior"
-                }
-            },
-            "responsive": true, "lengthChange": true, "autoWidth": false,
-            buttons: [{
-                extend: 'collection',
-                text: 'Reportes',
-                orientation: 'landscape',
-                buttons: [{
-                    text: 'Copiar',
-                    extend: 'copy',
-                }, {
-                    extend: 'pdf'
-                },{
-                    extend: 'csv'
-                },{
-                    extend: 'excel'
-                },{
-                    text: 'Imprimir',
-                    extend: 'print'
-                }
-                ]
-            },
-                {
-                    extend: 'colvis',
-                    text: 'Visor de columnas',
-                    collectionLayout: 'fixed three-column'
-                }
-            ],
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    });
-</script>
-
-
-
-
-
-<!-- modal para registrar proveedores -->
+<!-- Modal Crear -->
 <div class="modal fade" id="modal-create">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #1d36b6;color: white">
                 <h4 class="modal-title">Creación de un nuevo proveedor</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="">Nombre del proveedor <b>*</b></label>
-                            <input type="text" id="nombre_proveedor" class="form-control">
-                            <small style="color: red;display: none" id="lbl_nombre">* Este campo es requerido</small>
+                <form id="formCreateProveedor">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Nombre *</label>
+                            <input type="text" name="nombre_proveedor" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Celular *</label>
+                            <input type="number" name="celular" class="form-control" required>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="">Celular <b>*</b></label>
-                            <input type="number" id="celular" class="form-control">
-                            <small style="color: red;display: none" id="lbl_celular">* Este campo es requerido</small>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label>Teléfono</label>
+                            <input type="number" name="telefono" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Empresa *</label>
+                            <input type="text" name="empresa" class="form-control" required>
                         </div>
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="">Teléfono</label>
-                            <input type="number" id="telefono" class="form-control">
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label>Email</label>
+                            <input type="email" name="email" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Dirección *</label>
+                            <textarea name="direccion" class="form-control" rows="2" required></textarea>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="">Empresa <b>*</b></label>
-                            <input type="text" id="empresa" class="form-control">
-                            <small style="color: red;display: none" id="lbl_empresa">* Este campo es requerido</small>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="">Email</label>
-                            <input type="email" id="email" class="form-control">
-                            <small style="color: red;display: none" id="lbl_email">* Este campo es requerido</small>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="">Dirección <b>*</b></label>
-                            <textarea name="" id="direccion" cols="30" rows="3" class="form-control"></textarea>
-                            <small style="color: red;display: none" id="lbl_direccion">* Este campo es requerido</small>
-                        </div>
-                    </div>
-                </div>
-
+                </form>
             </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="btn_create">Guardar proveedor</button>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" id="btnSaveProveedor" class="btn btn-primary">Guardar</button>
             </div>
-            <div id="respuesta"></div>
         </div>
-        <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
 </div>
-<!-- /.modal -->
+
+<!-- Modal Editar -->
+<div class="modal fade" id="modal-edit">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #116f4a;color: white">
+                <h4 class="modal-title">Editar proveedor</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditProveedor">
+                    <input type="hidden" name="id_proveedor" id="edit_id">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Nombre *</label>
+                            <input type="text" name="nombre_proveedor" id="edit_nombre" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Celular *</label>
+                            <input type="number" name="celular" id="edit_celular" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label>Teléfono</label>
+                            <input type="number" name="telefono" id="edit_telefono" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Empresa *</label>
+                            <input type="text" name="empresa" id="edit_empresa" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label>Email</label>
+                            <input type="email" name="email" id="edit_email" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Dirección *</label>
+                            <textarea name="direccion" id="edit_direccion" class="form-control" rows="2" required></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" id="btnUpdateProveedor" class="btn btn-success">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
-    $('#btn_create').click(function () {
-        // alert("guardar");
+    const API_URL = "<?php echo $URL; ?>/api/proveedores/index.php";
 
-        var nombre_proveedor = $('#nombre_proveedor').val();
-        var celular = $('#celular').val();
-        var telefono = $('#telefono').val();
-        var empresa = $('#empresa').val();
-        var email = $('#email').val();
-        var direccion = $('#direccion').val();
+    //Cargar proveedores al iniciar
+    document.addEventListener("DOMContentLoaded", cargarProveedores);
 
-
-        if(nombre_proveedor == ""){
-            $('#nombre_proveedor').focus();
-            $('#lbl_nombre').css('display','block');
-        }else if(celular == ""){
-            $('#celular').focus();
-            $('#lbl_celular').css('display','block');
-        }else if(empresa == ""){
-            $('#empresa').focus();
-            $('#lbl_empresa').css('display','block');
-        }else if(direccion == ""){
-            $('#direccion').focus();
-            $('#lbl_direccion').css('display','block');
-        }
-        else {
-            var url = "../app/controllers/proveedores/create.php";
-            $.get(url,{nombre_proveedor:nombre_proveedor,celular:celular,telefono:telefono,empresa:empresa,email:email,direccion:direccion},function (datos) {
-                $('#respuesta').html(datos);
+    function cargarProveedores() {
+        fetch(API_URL)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const tbody = document.getElementById("tbodyProveedores");
+                    tbody.innerHTML = "";
+                    data.data.forEach((p, index) => {
+                        tbody.innerHTML += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${p.nombre_proveedor}</td>
+                            <td><a href="https://wa.me/57${p.celular}" target="_blank" class="btn btn-success btn-sm">${p.celular}</a></td>
+                            <td>${p.telefono ?? ""}</td>
+                            <td>${p.empresa}</td>
+                            <td>${p.email ?? ""}</td>
+                            <td>${p.direccion}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" onclick="abrirEditar(${p.id_proveedor})"><i class="fa fa-edit"></i></button>
+                                <button class="btn btn-danger btn-sm" onclick="eliminarProveedor(${p.id_proveedor})"><i class="fa fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                    });
+                }
             });
-        }
+    }
 
+    //Crear proveedor
+    document.getElementById("btnSaveProveedor").addEventListener("click", () => {
+        const form = document.getElementById("formCreateProveedor");
+        const formData = Object.fromEntries(new FormData(form).entries());
 
+        fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Proveedor creado correctamente");
+                    $('#modal-create').modal('hide');
+                    form.reset();
+                    cargarProveedores();
+                } else {
+                    alert("Error: " + data.error);
+                }
+            });
     });
+
+    //Abrir modal de edición
+    function abrirEditar(id) {
+        fetch(`${API_URL}?id=${id}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const p = data.data;
+                    document.getElementById("edit_id").value = p.id_proveedor;
+                    document.getElementById("edit_nombre").value = p.nombre_proveedor;
+                    document.getElementById("edit_celular").value = p.celular;
+                    document.getElementById("edit_telefono").value = p.telefono ?? "";
+                    document.getElementById("edit_empresa").value = p.empresa;
+                    document.getElementById("edit_email").value = p.email ?? "";
+                    document.getElementById("edit_direccion").value = p.direccion;
+                    $('#modal-edit').modal('show');
+                }
+            });
+    }
+
+    //Actualizar proveedor
+    document.getElementById("btnUpdateProveedor").addEventListener("click", () => {
+        const form = document.getElementById("formEditProveedor");
+        const formData = Object.fromEntries(new FormData(form).entries());
+
+        fetch(API_URL, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Proveedor actualizado");
+                    $('#modal-edit').modal('hide');
+                    cargarProveedores();
+                } else {
+                    alert("Error: " + data.error);
+                }
+            });
+    });
+
+    //Eliminar proveedor
+    function eliminarProveedor(id) {
+        if (confirm("¿Seguro que deseas eliminar este proveedor?")) {
+            fetch(`${API_URL}?id=${id}`, {
+                    method: "DELETE"
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Proveedor eliminado");
+                        cargarProveedores();
+                    }
+                });
+        }
+    }
 </script>
-
-
-
-
-
-
-
-
-

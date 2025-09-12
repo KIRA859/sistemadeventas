@@ -1,5 +1,4 @@
 <!-- Main Footer -->
- 
 <footer class="main-footer">
     <!-- To the right -->
     <div class="float-right d-none d-sm-inline">
@@ -13,14 +12,13 @@
 
 <!-- REQUIRED SCRIPTS -->
 
-
-<!-- Bootstrap 4 -->
+<!-- Bootstrap -->
 <script src="<?php echo $URL;?>/public/templeates/AdminLTE-3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
+
+<!-- AdminLTE -->
 <script src="<?php echo $URL;?>/public/templeates/AdminLTE-3.2.0/dist/js/adminlte.min.js"></script>
 
-
-<!-- DataTables  & Plugins -->
+<!-- DataTables -->
 <script src="<?php echo $URL;?>/public/templeates/AdminLTE-3.2.0/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?php echo $URL;?>/public/templeates/AdminLTE-3.2.0/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="<?php echo $URL;?>/public/templeates/AdminLTE-3.2.0/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
@@ -36,5 +34,3 @@
 
 </body>
 </html>
-
-

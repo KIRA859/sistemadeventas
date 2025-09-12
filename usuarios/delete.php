@@ -79,7 +79,7 @@ async function cargarUsuario() {
     }
 }
 
-// ✅ Eliminar usuario con la API
+// Eliminar usuario
 document.getElementById("formEliminar").addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -104,6 +104,5 @@ document.getElementById("formEliminar").addEventListener("submit", async (e) => 
     }
 });
 
-// 🚀 Ejecutar al cargar
 cargarUsuario();
 </script>

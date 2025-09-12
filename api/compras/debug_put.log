@@ -1,0 +1,20 @@
+Array
+(
+    [id_compra] => 45
+    [nro_compra] => 15
+    [fecha_compra] => 2025-09-11
+    [comprobante] => 123453
+    [total_compra] => 99999999.99
+    [id_proveedor] => 10
+    [productos] => Array
+        (
+            [0] => Array
+                (
+                    [id_producto] => 3
+                    [cantidad] => 10
+                    [precio_compra] => 170000
+                )
+
+        )
+
+)
