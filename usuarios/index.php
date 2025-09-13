@@ -14,7 +14,7 @@ include ('../layout/parte1.php');
                 <div class="col-sm-12">
                     <h1 class="m-0">Listado de usuarios</h1>
                 </div><!-- /.col -->
-            </div><!-- /.row -->
+            </div><!-- /.row -->a
         </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->

@@ -115,12 +115,12 @@ try {
             $sqlInsert = "
                 INSERT INTO tb_compras 
                 (nro_compra, fecha_compra, comprobante, id_usuario, id_proveedor, total_compra, fyh_creacion) 
-                VALUES (:nro, :fecha, :comprobante, :usuario, :proveedor, :total, :fyh_creacion)
+                VALUES (:nro, :fecha_compra, :comprobante, :usuario, :proveedor, :total, :fyh_creacion)
             ";
             $stmt = $pdo->prepare($sqlInsert);
             $stmt->execute([
                 ":nro"          => $nro_compra,
-                ":fecha"        => $data['fecha_compra'] ?? date('Y-m-d'),
+                ":fecha_compra"        => $data['fecha_compra'] ?? date('Y-m-d'),
                 ":comprobante"  => $data['comprobante'] ?? null,
                 ":usuario"      => $data['id_usuario'],
                 ":proveedor"    => $data['id_proveedor'],

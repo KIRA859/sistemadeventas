@@ -6,3 +6,15 @@ Array
     [password_user] => 12345678
     [password_repeat] => 12345678
 )
+Array
+(
+    [email] => daniel@gmail.com
+    [password_user] => 123
+)
+Array
+(
+    [nombres] => Julian
+    [email] => Julian@gmail.com
+    [password_user] => 12345678
+    [id_rol] => 3
+)
