@@ -365,5 +365,22 @@ include('../layout/parte1.php');
                     Swal.fire("Error", "Error en la petición. Revisa la consola.", "error");
                 });
         });
+
+        // === Buscador de productos ===
+        $("#buscar-producto").on("keyup", function() {
+            const query = $(this).val().toLowerCase().trim();
+
+            $("#lista-productos .product-card").each(function() {
+                const nombre = $(this).data("nombre").toLowerCase();
+                const codigo = $(this).find("p.text-muted").text().toLowerCase();
+
+                if (nombre.includes(query) || codigo.includes(query)) {
+                    $(this).closest(".col-md-6").show();
+                } else {
+                    $(this).closest(".col-md-6").hide();
+                }
+            });
+        });
+
     });
 </script>

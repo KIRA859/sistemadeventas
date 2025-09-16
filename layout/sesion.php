@@ -8,7 +8,7 @@ require_once __DIR__ . "/../app/config.php";
 
 // Validar sesión
 if (!isset($_SESSION['sesion_email'])) {
-    header("Location: $URL/login.php");
+    header("Location: $URL/login/index.php");
     exit;
 }
 

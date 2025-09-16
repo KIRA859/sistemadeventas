@@ -1,7 +1,6 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
-// --- Ajusta la ruta según la ubicación real de este archivo ---
 require_once __DIR__ . '../../../app/config.php';
 
 // Iniciar sesión (antes de setear $_SESSION)
@@ -14,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Obtener los datos del formulario (POST)
 $email = trim($_POST['email'] ?? '');
 $password_user = $_POST['password_user'] ?? '';
 

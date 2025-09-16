@@ -1,5 +1,5 @@
 <?php
-include('../../config.php'); 
+/*include('../../config.php'); 
 
 $email = $_POST['email'] ?? ''; 
 $password_user = $_POST['password_user'] ?? '';
@@ -30,6 +30,6 @@ if ($usuario && password_verify($password_user, $usuario['password_user'])) {
 } else {
     $_SESSION['mensaje'] = "Error: Email o contraseña incorrectos.";
     $_SESSION['icono'] = "error";
-    header('Location: ' . $URL . '/login'); 
+    header('Location: ' . $URL . '/login/index.php'); 
     exit; 
 }

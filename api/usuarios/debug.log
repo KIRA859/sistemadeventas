@@ -18,3 +18,10 @@ Array
     [password_user] => 12345678
     [id_rol] => 3
 )
+Array
+(
+    [nombres] => Jose Maria
+    [email] => mariajose@gmail.com
+    [password_user] => 12345678
+    [id_rol] => 3
+)
