@@ -1,0 +1,13 @@
+# Node / Electron
+node_modules/
+dist/
+build/
+
+# Binarios
+*.exe
+
+# Logs
+*.log
+
+# Entorno
+.env
